@@ -16,7 +16,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      TF_WORKSPACE: ${{ github.event.inputs.environment }}
+      ENVIRONMENT: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -38,13 +38,8 @@ jobs:
         run: |
           terraform init \
             -backend-config="bucket=${{secrets.TF_BACKEND_BUCKET}}" \
-            -backend-config="key=env/terraform.tfstate" \
+            -backend-config="key=${{env.ENVIRONMENT}}/terraform.tfstate" \
             -backend-config="region=us-east-1"
-
-      - name: Select workspace
-        working-directory: terraform
-        run: |
-          terraform workspace select ${{env.TF_WORKSPACE}} || terraform workspace new ${{ env.TF_WORKSPACE}}
 
       - name: Validate Terraform
         working-directory: terraform
