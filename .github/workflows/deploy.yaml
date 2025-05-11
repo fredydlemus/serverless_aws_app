@@ -34,6 +34,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Initialize Terraform
+        working-directory: terraform
         run: |
           terraform init \
             -backend-config="bucket=${{secrets.TF_BACKEND_BUCKET}}" \
@@ -41,15 +42,18 @@ jobs:
             -backend-config="region=us-east-1"
 
       - name: Select workspace
+        working-directory: terraform
         run: |
           terraform workspace select ${{env.TF_WORKSPACE}} || terraform workspace new ${{ env.TF_WORKSPACE}}
 
       - name: Validate Terraform
+        working-directory: terraform
         run: |
           terraform validate
           terraform fmt --check -recursive    
 
       - name: Plan Terraform
+        working-directory: terraform
         run: terraform plan -out=tfplan
 
 
