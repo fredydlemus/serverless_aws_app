@@ -6,7 +6,7 @@ module "orders_table" {
     point_in_time_recovery = true
     server_side_encryption = true
     
-    environment = var.environment
+    environment = terraform.workspace
     project     = var.project
     owner       = var.owner
 }
